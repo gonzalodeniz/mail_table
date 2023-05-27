@@ -4,7 +4,7 @@ import pytest
 from tabla_html import TablaHtml, TablaHtmlException
 
 
-def test_crea_tabla():
+def test_crea_tabla_sin_estilo():
     cabecera = ["c1", "c2"]
     datos = [["d1", "d2"], ["d3", "d4"], ["d5", "d6"]]
 
@@ -13,10 +13,48 @@ def test_crea_tabla():
 
     assert "<table><tr><th>c1</th><th>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
 
+def test_crea_tabla_con_estilo_cabecera():
+    cabecera = ["c1", "c2"]
+    datos = [["d1", "d2"], ["d3", "d4"], ["d5", "d6"]]
+    estilo_cabecera = ["font-weight: bold;", "font-style: italic;"]
+
+    tabla = TablaHtml(cabecera, datos)
+    tabla.inserta_estilo_cabecera(estilo_cabecera)
+    result = tabla.crea_tabla()
+
+    assert "<table><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
+
+def test_crea_tabla_con_estilo_datos():
+    cabecera = ["c1", "c2"]
+    datos = [["d1", "d2"], ["d3", "d4"], ["d5", "d6"]]
+    estilo_datos = [["font-weight: bold;", "font-style: italic;"],
+                    ["font-weight: bold;", "font-style: italic;"],
+                    ["font-weight: bold;", "font-style: italic;"]]
+
+    tabla = TablaHtml(cabecera, datos)
+    tabla.inserta_estilo_cuerpo(estilo_datos)
+    result = tabla.crea_tabla()
+
+    assert "<table><tr><th>c1</th><th>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
+
+def test_crea_tabla_con_estilo_cabecera_datos():
+    cabecera = ["c1", "c2"]
+    datos = [["d1", "d2"], ["d3", "d4"], ["d5", "d6"]]
+    estilo_cabecera = ["font-weight: bold;", "font-style: italic;"]
+    estilo_datos = [["font-weight: bold;", "font-style: italic;"],
+                    ["font-weight: bold;", "font-style: italic;"],
+                    ["font-weight: bold;", "font-style: italic;"]]
+
+    tabla = TablaHtml(cabecera, datos)
+    tabla.inserta_estilo_cabecera(estilo_cabecera)
+    tabla.inserta_estilo_cuerpo(estilo_datos)
+    result = tabla.crea_tabla()
+
+    assert "<table><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
 
 def test_inserta_estilo_cabecera():
     cabecera = ["c1", "c2"]
-    estilo_cabecera = ["bold", "italic"]
+    estilo_cabecera = ["font-weight: bold;", "font-style: italic;"]
 
     tabla = TablaHtml(cabecera, [])
 

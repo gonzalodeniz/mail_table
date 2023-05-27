@@ -14,8 +14,8 @@ class TablaHtml:
     def __init__(self, cabecera: List[str], datos: List[List[str]]):
         self.datos_cabecera = cabecera
         self.datos_cuerpo = datos
-        self.estilo_cabecera = None
-        self.estilo_cuerpo = None
+        self.estilo_cabecera: List[str] = []
+        self.estilo_cuerpo: List[List[str]] = [[]]
 
     def crea_tabla(self) -> str:
         table_html = "<table>"
@@ -35,6 +35,19 @@ class TablaHtml:
         self.estilo_cuerpo = estilo_cuerpo
 
     def _crea_html_cabecera(self) -> str:
+        if self._hay_estilo_cabecera():
+            return self._crea_html_cabecera_con_estilo()
+        else:
+            return self._crea_html_cabecera_sin_estilo()
+
+    def _crea_html_cabecera_con_estilo(self) -> str:
+        cabecera_html = "<tr>"
+        for dato, estilo in zip(self.datos_cabecera, self.estilo_cabecera):
+            cabecera_html += f"<th style='{estilo}'>{dato}</th>"
+        cabecera_html += "</tr>"
+        return cabecera_html
+
+    def _crea_html_cabecera_sin_estilo(self) -> str:
         cabecera_html = "<tr>"
         for h in self.datos_cabecera:
             cabecera_html += f"<th>{h}</th>"
@@ -42,13 +55,31 @@ class TablaHtml:
         return cabecera_html
 
     def _crea_html_cuerpo(self) -> str:
+        if self._hay_estilo_cuerpo():
+            return self._crea_html_cuerpo_con_estilo()
+        else:
+            return self._crea_html_cuerpo_sin_estilo()
+
+    def _crea_html_cuerpo_sin_estilo(self) -> str:
         filas_html = ""
-        for i in range(len(self.datos_cuerpo)):
-            fila_dato = self.datos_cuerpo[i]
-            filas_html += self._crea_html_fila(fila_dato)
+        for fila in self.datos_cuerpo:
+            filas_html += self._crea_html_fila_sin_estilo(fila)
         return filas_html
 
-    def _crea_html_fila(self, fila) -> str:
+    def _crea_html_cuerpo_con_estilo(self) -> str:
+        filas_html = ""
+        for fila_datos, fila_estilo in zip(self.datos_cuerpo, self.estilo_cuerpo):
+            filas_html += self._crea_html_fila_con_estilo(fila_datos, fila_estilo)
+        return filas_html
+
+    def _crea_html_fila_con_estilo(self, fila_datos: List[str], fila_estilo: List[str]) -> str:
+        fila_html = "<tr>"
+        for celda, estilo in zip(fila_datos, fila_estilo):
+            fila_html += f"<td style='{estilo}'>{celda}</td>"
+        fila_html += "</tr>"
+        return fila_html
+
+    def _crea_html_fila_sin_estilo(self, fila: List[str]) -> str:
         fila_html = "<tr>"
         for celda in fila:
             fila_html += f"<td>{celda}</td>"
@@ -68,7 +99,21 @@ class TablaHtml:
 
         return True
 
+    def _hay_estilo_cabecera(self):
+        return self.estilo_cabecera != []
+
+    def _hay_estilo_cuerpo(self):
+        return self.estilo_cuerpo != [[]]
+
+
 h = ['c1', 'c2']
 d = [['d1', 'd2'], ['d3', 'd4'], ['d5', 'd6']]
-t = TablaHtml(h, d)
-print(t.crea_tabla())
+estilo_cabecera = ["font-weight: bold;", "font-style: italic;"]
+estilo_datos = [["font-weight: bold;", "font-style: italic;"],
+                ["font-weight: bold;", "font-style: italic;"],
+                ["font-weight: bold;", "font-style: italic;"]]
+
+tabla = TablaHtml(h, d)
+tabla.inserta_estilo_cabecera(estilo_cabecera)
+tabla.inserta_estilo_cuerpo(estilo_datos)
+print(tabla.crea_tabla())
