@@ -122,10 +122,3 @@ class TablaHtml:
     def _hay_estilo_cuerpo(self):
         return self.estilo_cuerpo != [[]]
 
-
-cabecera = ["c1", "c2"]
-estilo_tabla = "table { table-layout: auto; border-collapse: collapse; border-bottom: 2px solid #f00;}"
-tabla = TablaHtml(cabecera, [])
-tabla.inserta_estilo_tabla(estilo_tabla)
-result = tabla.crea_tabla()
-print(result)
