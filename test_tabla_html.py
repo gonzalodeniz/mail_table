@@ -11,7 +11,7 @@ def test_crea_tabla_sin_estilo():
     tabla = TablaHtml(cabecera, datos)
     result = tabla.crea_tabla()
 
-    assert "<table><tr><th>c1</th><th>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
+    assert "<table><style>table { table-layout: auto; border-collapse: collapse; } tr.cabecera { border-bottom: 2px solid #999; } th, td { border-bottom: 1px solid #ddd; padding: 15px; text-align: left; }</style><tr class='cabecera'><th>c1</th><th>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
 
 def test_crea_tabla_con_estilo_cabecera():
     cabecera = ["c1", "c2"]
@@ -22,7 +22,7 @@ def test_crea_tabla_con_estilo_cabecera():
     tabla.inserta_estilo_cabecera(estilo_cabecera)
     result = tabla.crea_tabla()
 
-    assert "<table><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
+    assert "<table><style>table { table-layout: auto; border-collapse: collapse; } tr.cabecera { border-bottom: 2px solid #999; } th, td { border-bottom: 1px solid #ddd; padding: 15px; text-align: left; }</style><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td>d1</td><td>d2</td></tr><tr><td>d3</td><td>d4</td></tr><tr><td>d5</td><td>d6</td></tr></table>" == result
 
 def test_crea_tabla_con_estilo_datos():
     cabecera = ["c1", "c2"]
@@ -35,7 +35,7 @@ def test_crea_tabla_con_estilo_datos():
     tabla.inserta_estilo_cuerpo(estilo_datos)
     result = tabla.crea_tabla()
 
-    assert "<table><tr><th>c1</th><th>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
+    assert "<table><style>table { table-layout: auto; border-collapse: collapse; } tr.cabecera { border-bottom: 2px solid #999; } th, td { border-bottom: 1px solid #ddd; padding: 15px; text-align: left; }</style><tr class='cabecera'><th>c1</th><th>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
 
 def test_crea_tabla_con_estilo_cabecera_datos():
     cabecera = ["c1", "c2"]
@@ -50,7 +50,24 @@ def test_crea_tabla_con_estilo_cabecera_datos():
     tabla.inserta_estilo_cuerpo(estilo_datos)
     result = tabla.crea_tabla()
 
-    assert "<table><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
+    assert "<table><style>table { table-layout: auto; border-collapse: collapse; } tr.cabecera { border-bottom: 2px solid #999; } th, td { border-bottom: 1px solid #ddd; padding: 15px; text-align: left; }</style><tr><th style='font-weight: bold;'>c1</th><th style='font-style: italic;'>c2</th></tr><tr><td style='font-weight: bold;'>d1</td><td style='font-style: italic;'>d2</td></tr><tr><td style='font-weight: bold;'>d3</td><td style='font-style: italic;'>d4</td></tr><tr><td style='font-weight: bold;'>d5</td><td style='font-style: italic;'>d6</td></tr></table>" == result
+
+
+def test_crea_tabla_con_estilo_tabla():
+    cabecera = ["c1", "c2"]
+    estilo_tabla = "table { table-layout: auto; border-collapse: collapse; border-bottom: 2px solid #f00;}"
+    tabla = TablaHtml(cabecera, [])
+    tabla.inserta_estilo_tabla(estilo_tabla)
+    result = tabla.crea_tabla()
+
+    assert "<table><style>table { table-layout: auto; border-collapse: collapse; border-bottom: 2px solid #f00;}</style><tr class='cabecera'><th>c1</th><th>c2</th></tr></table>" == result
+
+def test_inserta_estilo_tabla():
+    cabecera = ["c1", "c2"]
+    estilo_tabla = "table { table-layout: auto; border-collapse: collapse; border-bottom: 2px solid #f00;}"
+    tabla = TablaHtml(cabecera, [])
+    tabla.inserta_estilo_tabla(estilo_tabla)
+    assert tabla.estilo_tabla == estilo_tabla
 
 def test_inserta_estilo_cabecera():
     cabecera = ["c1", "c2"]

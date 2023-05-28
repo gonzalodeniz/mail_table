@@ -7,32 +7,49 @@ Dependencias: mypy 1.3
 """
 from typing import List
 
+
 class TablaHtmlException(Exception):
     pass
 
+
 class TablaHtml:
+
     def __init__(self, cabecera: List[str], datos: List[List[str]]):
-        self.datos_cabecera = cabecera
-        self.datos_cuerpo = datos
+        self.datos_cabecera:  List[str] = cabecera
+        self.datos_cuerpo:    List[List[str]] = datos
         self.estilo_cabecera: List[str] = []
-        self.estilo_cuerpo: List[List[str]] = [[]]
+        self.estilo_cuerpo:   List[List[str]] = [[]]
+        self.estilo_tabla: str = "table { table-layout: auto; border-collapse: collapse; } " \
+                                 "tr.cabecera { border-bottom: 2px solid #999; } " \
+                                 "th, td { border-bottom: 1px solid #ddd; padding: 15px; text-align: left; }"
 
     def crea_tabla(self) -> str:
         table_html = "<table>"
+        table_html += self._crea_estilo_tabla()
         table_html += self._crea_html_cabecera()
         table_html += self._crea_html_cuerpo()
         table_html += "</table>"
         return table_html
 
+    def inserta_estilo_tabla(self, estilo_tabla: str) -> None:
+        self.estilo_tabla = estilo_tabla
+
     def inserta_estilo_cabecera(self, estilo_cabecera: List[str]) -> None:
         if not self._valida_longitud_estilo_cabecera(estilo_cabecera):
-            raise TablaHtmlException("La longitud de los estilos de cabecera no coincide con la longitud de la cabecera")
+            raise TablaHtmlException(
+                "La longitud de los estilos de cabecera no coincide con la longitud de la cabecera")
         self.estilo_cabecera = estilo_cabecera
 
     def inserta_estilo_cuerpo(self, estilo_cuerpo: List[List[str]]) -> None:
         if not self._valida_longitud_estilo_cuerpo(estilo_cuerpo):
             raise TablaHtmlException("La longitud de los estilos de cuerpo no coincide con la longitud del cuerpo")
         self.estilo_cuerpo = estilo_cuerpo
+
+    def _crea_estilo_tabla(self) -> str:
+        estilo_tabla = "<style>"
+        estilo_tabla += self.estilo_tabla
+        estilo_tabla += "</style>"
+        return estilo_tabla
 
     def _crea_html_cabecera(self) -> str:
         if self._hay_estilo_cabecera():
@@ -48,7 +65,7 @@ class TablaHtml:
         return cabecera_html
 
     def _crea_html_cabecera_sin_estilo(self) -> str:
-        cabecera_html = "<tr>"
+        cabecera_html = "<tr class='cabecera'>"
         for h in self.datos_cabecera:
             cabecera_html += f"<th>{h}</th>"
         cabecera_html += "</tr>"
@@ -106,14 +123,9 @@ class TablaHtml:
         return self.estilo_cuerpo != [[]]
 
 
-h = ['c1', 'c2']
-d = [['d1', 'd2'], ['d3', 'd4'], ['d5', 'd6']]
-estilo_cabecera = ["font-weight: bold;", "font-style: italic;"]
-estilo_datos = [["font-weight: bold;", "font-style: italic;"],
-                ["font-weight: bold;", "font-style: italic;"],
-                ["font-weight: bold;", "font-style: italic;"]]
-
-tabla = TablaHtml(h, d)
-tabla.inserta_estilo_cabecera(estilo_cabecera)
-tabla.inserta_estilo_cuerpo(estilo_datos)
-print(tabla.crea_tabla())
+cabecera = ["c1", "c2"]
+estilo_tabla = "table { table-layout: auto; border-collapse: collapse; border-bottom: 2px solid #f00;}"
+tabla = TablaHtml(cabecera, [])
+tabla.inserta_estilo_tabla(estilo_tabla)
+result = tabla.crea_tabla()
+print(result)
