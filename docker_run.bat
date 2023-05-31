@@ -1,0 +1,1 @@
+docker run -it --rm --name mail_tablc mail_table
