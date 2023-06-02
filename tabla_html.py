@@ -58,7 +58,7 @@ class TablaHtml:
             return self._crea_html_cabecera_sin_estilo()
 
     def _crea_html_cabecera_con_estilo(self) -> str:
-        cabecera_html = "<tr>"
+        cabecera_html:str = "<tr>"
         for dato, estilo in zip(self.datos_cabecera, self.estilo_cabecera):
             cabecera_html += f"<th style='{estilo}'>{dato}</th>"
         cabecera_html += "</tr>"
